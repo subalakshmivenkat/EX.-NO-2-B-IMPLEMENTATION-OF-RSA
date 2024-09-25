@@ -65,7 +65,7 @@ print("Original Message Sent = ", m)
 ```
 
 ## OUTPUT:
-![image](https://github.com/user-attachments/assets/78101c1f-1a8f-433f-b401-5a93fbca024c)
+![image](https://github.com/user-attachments/assets/91ff77d6-1899-4f0f-8b9f-7aa115b72215)
 
 ## RESULT:
   Thus the C program to implement RSA encryption technique had been implemented successfully
