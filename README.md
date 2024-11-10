@@ -1,10 +1,8 @@
 # EX.-NO-2-B-IMPLEMENTATION-OF-RSA
-
 ## AIM:
   To write a C program to implement the RSA encryption algorithm.
   
 ## ALGORITHM:
-
   STEP-1: Select two co-prime numbers as p and q.
   
   STEP-2: Compute n as the product of p and q.
@@ -21,51 +19,96 @@
   
 ## PROGRAM: 
 ```
-# Python for RSA asymmetric cryptographic algorithm.
+#include <stdio.h>
+#include <stdlib.h>
 
-import math
+// Function to calculate the gcd
+int gcd(int a, int b) {
+    while (b != 0) {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
 
-def gcd(a, h):
-	temp = 0
-	while(1):
-		temp = a % h
-		if (temp == 0):
-			return h
-		a = h
-		h = temp
+// Function to calculate (base^exponent) % mod
+int mod_exp(int base, int exponent, int mod) {
+    int result = 1;
+    base = base % mod;
+    while (exponent > 0) {
+        if (exponent % 2 == 1) {
+            result = (result * base) % mod;
+        }
+        exponent = exponent >> 1;
+        base = (base * base) % mod;
+    }
+    return result;
+}
 
-p = 3
-q = 7
-n = p*q
-e = 2
-phi = (p-1)*(q-1)
+// Function to find the multiplicative inverse of e mod phi
+int mod_inverse(int e, int phi) {
+    int t = 0, newt = 1;
+    int r = phi, newr = e;
+    while (newr != 0) {
+        int quotient = r / newr;
+        int temp = t;
+        t = newt;
+        newt = temp - quotient * newt;
 
-while (e < phi):
-	if(gcd(e, phi) == 1):
-		break
-	else:
-		e = e+1
-k = 2
-d = (1 + (k*phi))/e
+        temp = r;
+        r = newr;
+        newr = temp - quotient * newr;
+    }
+    if (r > 1) {
+        printf("e does not have an inverse mod phi\n");
+        return -1;
+    }
+    if (t < 0) t = t + phi;
+    return t;
+}
 
-# Message to be encrypted
-msg = 12.0
+int main() {
+    int p, q, n, phi, e, d, message;
 
-print("Message data = ", msg)
+    // Step 1: Choose two prime numbers
+    printf("Enter two prime numbers p and q: ");
+    scanf("%d %d", &p, &q);
 
-# Encryption c = (msg ^ e) % n
-c = pow(msg, e)
-c = math.fmod(c, n)
-print("Encrypted data = ", c)
+    // Step 2: Compute n and phi
+    n = p * q;
+    phi = (p - 1) * (q - 1);
 
-# Decryption m = (c ^ d) % n
-m = pow(c, d)
-m = math.fmod(m, n)
-print("Original Message Sent = ", m)
+    // Step 3: Find a public key exponent e
+    for (e = 2; e < phi; e++) {
+        if (gcd(e, phi) == 1) {
+            break;
+        }
+    }
+    printf("Public key (e, n) = (%d, %d)\n", e, n);
+
+    // Step 4: Compute the private key d
+    d = mod_inverse(e, phi);
+    if (d == -1) {
+        return 1;
+    }
+    printf("Private key (d, n) = (%d, %d)\n", d, n);
+
+    // Step 5a: Encryption
+    printf("Enter a message (integer) to encrypt: ");
+    scanf("%d", &message);
+    int encrypted_message = mod_exp(message, e, n);
+    printf("Encrypted message: %d\n", encrypted_message);
+
+    // Step 5b: Decryption
+    int decrypted_message = mod_exp(encrypted_message, d, n);
+    printf("Decrypted message: %d\n", decrypted_message);
+
+    return 0;
+}
 ```
-
 ## OUTPUT:
-![image](https://github.com/user-attachments/assets/91ff77d6-1899-4f0f-8b9f-7aa115b72215)
+![image](https://github.com/user-attachments/assets/9ca3e60d-bbe8-4671-a972-a0e12d24e4be)
 
 ## RESULT:
   Thus the C program to implement RSA encryption technique had been implemented successfully
